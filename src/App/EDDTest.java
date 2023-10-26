@@ -9,7 +9,7 @@ import Functions.*;
 
 /**
  *
- * @author Admin
+ * @author Jose Ignacio
  */
 public class EDDTest {
 
@@ -18,8 +18,21 @@ public class EDDTest {
      */
     public static void main(String[] args) {
         
-        // aquí pones el código con el que llamas a la función FileLoader.load(archivo) para cargar el archivo y meterlo en el grafo "graph"
-        
-        graph.show();
     }
+    Graph graph = new Graph();
+    File archivo = new File("nombre_del_archivo.txt"); // Reemplaza "nombre_del_archivo.txt" con la ruta de tu archivo
+    Grafo grafoCargado = FileLoader.load(archivo);
+
+    // Ahora, copia los datos del grafo cargado al objeto 'graph'
+    for (User usuario : grafoCargado.users()) {
+        graph.addUser(usuario.getUsername());
+        for (User seguido : usuario.getFollows()) {
+            graph.addFollow(usuario, seguido);
+        }
+    }
+
+    // Muestra la red social en la consola
+    graph.show();
 }
+
+
