@@ -10,8 +10,8 @@ package EDD;
  * @param <T>
  */
 public class List <T> {
-    private Node <T> pFirst;
-    private Node <T> pLast;
+    private Nodo <T> pFirst;
+    private Nodo <T> pLast;
     private int size;
     
     // Constructor
@@ -29,19 +29,19 @@ public class List <T> {
         return pFirst == null;
     }
     
-    public Node first() {
+    public Nodo first() {
         return pFirst;
     }
     
-    public Node last() {
+    public Nodo last() {
         return pLast;
     }
     
-    public T read(Node <T> pValue) {
+    public T read(Nodo <T> pValue) {
         return pValue.tInfo;
     }
     
-    public Node <T> next(Node <T> pValue) {
+    public Nodo <T> next(Nodo <T> pValue) {
         if (pValue != null) {
             return pValue.pNext;
         } else {
@@ -50,7 +50,7 @@ public class List <T> {
     }
     
     public void add(T elem) {
-        Node <T> pNew = new Node(elem);
+        Nodo <T> pNew = new Nodo(elem);
         if (pFirst == null) {
             pFirst = pNew;
             pLast = pNew;
@@ -61,7 +61,8 @@ public class List <T> {
         size++;
     }
     public void delete(T elem) {
-        Node <T> pCurr = pFirst, pPrev = null;
+        Nodo <T> pCurr = pFirst;
+        Nodo <T> pPrev = null;
         boolean found = false;
         while ((pCurr != null) && (!found)) {
             found = (pCurr.tInfo == elem);
@@ -86,7 +87,7 @@ public class List <T> {
     }
     
     public boolean contains(T elem) {
-        for (Node <T> pAux = pFirst; pAux != null; pAux = pAux.pNext) {
+        for (Nodo <T> pAux = pFirst; pAux != null; pAux = pAux.pNext) {
             if (elem == pAux.tInfo) {
                 return true;
             }
@@ -95,7 +96,7 @@ public class List <T> {
     }
     
     public void show() {
-        Node <T> pValue = first();
+        Nodo <T> pValue = first();
         while (pValue != null) {
             System.out.println(pValue.tInfo);
             pValue = pValue.pNext;
