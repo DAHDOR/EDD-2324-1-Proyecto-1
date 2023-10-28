@@ -79,6 +79,21 @@ public class List <T> {
         }
     }
     
+    public void clear() {
+        while (pFirst != null) {
+            pFirst = pFirst.pNext;
+        }
+    }
+    
+    public boolean contains(T elem) {
+        for (Node <T> pAux = pFirst; pAux != null; pAux = pAux.pNext) {
+            if (elem == pAux.tInfo) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void show() {
         Node <T> pValue = first();
         while (pValue != null) {
