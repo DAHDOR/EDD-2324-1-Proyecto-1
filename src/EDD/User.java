@@ -16,4 +16,21 @@ public class User {
         this.username = username;
         follows = new List();
     }
+    
+    public boolean follows(User user) {
+        return follows.contains(user);
+    }
+    
+    public boolean follows(String username) {
+        for (Nodo <User> pAux = follows.first(); pAux != null ; pAux = pAux.pNext) {
+            if (pAux.tInfo.username.equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public String username() {
+        return username;
+    }
 }

@@ -71,8 +71,8 @@ public class ListTest {
     public void testFirst() {
         System.out.println("first");
         List instance = null;
-        Node expResult = null;
-        Node result = instance.first();
+        Nodo expResult = null;
+        Nodo result = instance.first();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -99,8 +99,8 @@ public class ListTest {
     public void testNext() {
         System.out.println("next");
         List instance = null;
-        Node expResult = null;
-        Node result = instance.next(null);
+        Nodo expResult = null;
+        Nodo result = instance.next(null);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

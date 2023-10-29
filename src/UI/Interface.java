@@ -16,7 +16,12 @@ public class Interface extends javax.swing.JFrame {
      * Creates new form Interfaz
      */
     public Interface() {
+        
         initComponents();
+        
+        filter = new javax.swing.filechooser.FileNameExtensionFilter("Archivos TXT", "txt");
+        
+        FileChooser.setFileFilter(filter);
     }
 
     /**
@@ -28,7 +33,7 @@ public class Interface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jFileChooser1 = new javax.swing.JFileChooser();
+        FileChooser = new javax.swing.JFileChooser();
         WindowTabs = new javax.swing.JTabbedPane();
         TabStart = new javax.swing.JPanel();
         StartTitle = new javax.swing.JLabel();
@@ -37,16 +42,19 @@ public class Interface extends javax.swing.JFrame {
         WindowMenus = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         FileCreate = new javax.swing.JMenuItem();
+        FileLoad = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1024, 576));
 
+        TabStart.setMinimumSize(new java.awt.Dimension(1024, 518));
+        TabStart.setPreferredSize(new java.awt.Dimension(1024, 518));
         TabStart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         StartTitle.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         StartTitle.setText("Connections");
-        TabStart.add(StartTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 160, -1, -1));
+        TabStart.add(StartTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 170, -1, -1));
 
         StartCreate.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         StartCreate.setText("Nueva red social");
@@ -55,11 +63,16 @@ public class Interface extends javax.swing.JFrame {
                 StartCreateActionPerformed(evt);
             }
         });
-        TabStart.add(StartCreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 270, -1, -1));
+        TabStart.add(StartCreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 270, -1, -1));
 
         StartLoad.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         StartLoad.setText("Cargar red social");
-        TabStart.add(StartLoad, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 270, -1, -1));
+        StartLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StartLoadActionPerformed(evt);
+            }
+        });
+        TabStart.add(StartLoad, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 270, -1, -1));
 
         WindowTabs.addTab("Inicio", TabStart);
 
@@ -74,6 +87,14 @@ public class Interface extends javax.swing.JFrame {
             }
         });
         MenuFile.add(FileCreate);
+
+        FileLoad.setText("Cargar red social...");
+        FileLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FileLoadActionPerformed(evt);
+            }
+        });
+        MenuFile.add(FileLoad);
 
         WindowMenus.add(MenuFile);
 
@@ -121,8 +142,45 @@ public class Interface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_FileCreateActionPerformed
 
+    private void StartLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartLoadActionPerformed
+        
+        try {
+            int returnVal = FileChooser.showOpenDialog(null);
+
+            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                EDD.Graph graph = new EDD.Graph();
+                graph.load(FileChooser.getSelectedFile());
+                GraphViewer tab = new GraphViewer(graph);
+                String filename = FileChooser.getSelectedFile().getName();
+                WindowTabs.add(filename.substring(0, filename.length()-4), tab);
+            }
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_StartLoadActionPerformed
+
+    private void FileLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileLoadActionPerformed
+        
+        try {
+            int returnVal = FileChooser.showOpenDialog(null);
+
+            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                EDD.Graph graph = new EDD.Graph();
+                graph.load(FileChooser.getSelectedFile());
+                GraphViewer tab = new GraphViewer(graph);
+                WindowTabs.add(tab);
+            }
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_FileLoadActionPerformed
+
+    
+    javax.swing.filechooser.FileNameExtensionFilter filter;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser FileChooser;
     private javax.swing.JMenuItem FileCreate;
+    private javax.swing.JMenuItem FileLoad;
     private javax.swing.JMenu MenuEdit;
     private javax.swing.JMenu MenuFile;
     private javax.swing.JButton StartCreate;
@@ -131,6 +189,5 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JPanel TabStart;
     private javax.swing.JMenuBar WindowMenus;
     private javax.swing.JTabbedPane WindowTabs;
-    private javax.swing.JFileChooser jFileChooser1;
     // End of variables declaration//GEN-END:variables
 }

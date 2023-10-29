@@ -5,6 +5,7 @@
 package UI;
 
 import App.Utilities;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -16,12 +17,70 @@ public class GraphViewer extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public GraphViewer() {
+        
         initComponents();
+        
+        index = 0;
+        selectedUsername = "";
+        followAction = "";
+        targetUser = new EDD.User("none");
+        
+        comboBoxModel = new javax.swing.DefaultComboBoxModel();
+        
         model = new javax.swing.DefaultListModel();
         usernameList = new javax.swing.JList();
         usernameList.setModel(model);
         userListScroll.setViewportView(usernameList);
+        usernameList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usernameListMouseClicked(evt);
+            }
+        });
+        
         graph = new EDD.Graph();
+        
+        org.graphstream.ui.view.Viewer viewer = graph.multigraph().display();
+        viewer.setCloseFramePolicy(org.graphstream.ui.view.Viewer.CloseFramePolicy.HIDE_ONLY);
+        
+        graphPanel = (javax.swing.JPanel) viewer.getDefaultView();
+                
+        GraphViewerSplit.setRightComponent(graphPanel);
+    }
+    
+    public GraphViewer(EDD.Graph graph) {
+        
+        initComponents();
+        
+        index = 0;
+        selectedUsername = "";
+        followAction = "";
+        targetUser = new EDD.User("none");
+        
+        comboBoxModel = new javax.swing.DefaultComboBoxModel();
+        
+        model = new javax.swing.DefaultListModel();
+        for (EDD.Nodo <EDD.User> pAux = graph.users().first(); pAux != null; pAux = pAux.next()) {
+            model.addElement(pAux.info().username());
+        }
+        usernameList = new javax.swing.JList();
+        usernameList.setModel(model);
+        userListScroll.setViewportView(usernameList);
+        usernameList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usernameListMouseClicked(evt);
+            }
+        });
+        
+        this.graph = graph;
+        
+        org.graphstream.ui.view.Viewer viewer = this.graph.multigraph().display();
+        viewer.setCloseFramePolicy(org.graphstream.ui.view.Viewer.CloseFramePolicy.HIDE_ONLY);
+        
+        graphPanel = (javax.swing.JPanel) viewer.getDefaultView();
+                
+        GraphViewerSplit.setRightComponent(graphPanel);
     }
 
     /**
@@ -33,33 +92,118 @@ public class GraphViewer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jSplitPane2 = new javax.swing.JSplitPane();
+        userMenu = new javax.swing.JPopupMenu();
+        deleteUser = new javax.swing.JMenuItem();
+        addFollow = new javax.swing.JMenuItem();
+        deleteFollow = new javax.swing.JMenuItem();
+        followFrame = new javax.swing.JFrame();
+        followPanel = new javax.swing.JPanel();
+        combo = new javax.swing.JComboBox<>();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        GraphViewerSplit = new javax.swing.JSplitPane();
+        Users = new javax.swing.JSplitPane();
         addUser = new javax.swing.JButton();
         userListScroll = new javax.swing.JScrollPane();
 
-        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        deleteUser.setText("Eliminar usuario");
+        deleteUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserActionPerformed(evt);
+            }
+        });
+        userMenu.add(deleteUser);
+
+        addFollow.setText("Agregar seguimiento");
+        addFollow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFollowActionPerformed(evt);
+            }
+        });
+        userMenu.add(addFollow);
+
+        deleteFollow.setText("Eliminar seguimiento");
+        deleteFollow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteFollowActionPerformed(evt);
+            }
+        });
+        userMenu.add(deleteFollow);
+
+        followFrame.setMaximumSize(new java.awt.Dimension(223, 150));
+        followFrame.setMinimumSize(new java.awt.Dimension(223, 150));
+        followFrame.setPreferredSize(new java.awt.Dimension(223, 150));
+
+        followPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        combo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboActionPerformed(evt);
+            }
+        });
+        followPanel.add(combo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 180, -1));
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+        followPanel.add(okButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+
+        cancelButton.setText("Cancelar");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        followPanel.add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
+
+        javax.swing.GroupLayout followFrameLayout = new javax.swing.GroupLayout(followFrame.getContentPane());
+        followFrame.getContentPane().setLayout(followFrameLayout);
+        followFrameLayout.setHorizontalGroup(
+            followFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(followPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+        );
+        followFrameLayout.setVerticalGroup(
+            followFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(followPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+        );
+
+        setMinimumSize(new java.awt.Dimension(1024, 518));
+        setPreferredSize(new java.awt.Dimension(1024, 518));
+
+        GraphViewerSplit.setMinimumSize(new java.awt.Dimension(1024, 518));
+        GraphViewerSplit.setPreferredSize(new java.awt.Dimension(1024, 518));
+
+        Users.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        Users.setMinimumSize(new java.awt.Dimension(100, 518));
+        Users.setPreferredSize(new java.awt.Dimension(100, 518));
 
         addUser.setText("+");
+        addUser.setMaximumSize(new java.awt.Dimension(300, 27));
+        addUser.setMinimumSize(new java.awt.Dimension(100, 27));
+        addUser.setPreferredSize(new java.awt.Dimension(100, 27));
         addUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addUserActionPerformed(evt);
             }
         });
-        jSplitPane2.setTopComponent(addUser);
-        jSplitPane2.setRightComponent(userListScroll);
+        Users.setTopComponent(addUser);
+        Users.setRightComponent(userListScroll);
 
-        jSplitPane1.setLeftComponent(jSplitPane2);
+        GraphViewerSplit.setLeftComponent(Users);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+            .addComponent(GraphViewerSplit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+            .addComponent(GraphViewerSplit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -101,13 +245,111 @@ public class GraphViewer extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addUserActionPerformed
 
+    private void deleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserActionPerformed
+
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(null, "¿Seguro que quieres eliminar este usuario?", "Confirmación", 0);
+
+        if (confirm == 0) {
+            graph.deleteUser(graph.getUser(model.get(index).toString()));
+            model.remove(index);
+        }
+    }//GEN-LAST:event_deleteUserActionPerformed
+
+    private void addFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFollowActionPerformed
+        
+        followAction = "adding";
+        
+        comboBoxModel.removeAllElements();
+        for (int i = 0; i < model.getSize(); i++) {
+            if ((!targetUser.follows(model.get(i).toString())) && !targetUser.username().equals(model.get(i).toString())) {
+                comboBoxModel.addElement(model.get(i).toString());
+            }
+        }
+        
+        if (comboBoxModel.getSize() > 0) {
+            combo.setModel(comboBoxModel);
+            followFrame.setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE);
+            followFrame.setVisible(true);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(null, "No hay usuarios a los que seguir.");
+        }
+    }//GEN-LAST:event_addFollowActionPerformed
+
+    private void comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        
+        selectedUsername = combo.getSelectedItem().toString();
+        
+        switch (followAction) {
+            case "adding" -> graph.addFollow(targetUser, graph.getUser(selectedUsername));
+            case "deleting" -> graph.deleteFollow(targetUser, graph.getUser(selectedUsername));
+        }
+        
+        followFrame.setVisible(false);
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        followFrame.setVisible(false);
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void deleteFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFollowActionPerformed
+        
+        followAction = "deleting";
+        
+        comboBoxModel.removeAllElements();
+        for (int i = 0; i < model.getSize(); i++) {
+            if (targetUser.follows(model.get(i).toString())) {
+                comboBoxModel.addElement(model.get(i).toString());
+            }
+        }
+        
+        if (comboBoxModel.getSize() > 0) {
+            combo.setModel(comboBoxModel);
+            followFrame.setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE);
+            followFrame.setVisible(true);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(null, "No hay seguimientos que eliminar.");
+        }
+        
+
+    }//GEN-LAST:event_deleteFollowActionPerformed
+
+    private void usernameListMouseClicked(java.awt.event.MouseEvent evt) {
+        
+        index = usernameList.locationToIndex(evt.getPoint());
+        
+        targetUser = graph.getUser(model.get(index).toString());
+        
+        if ((SwingUtilities.isRightMouseButton(evt)) && (usernameList.locationToIndex(evt.getPoint()) == index)) {
+            userMenu.show(usernameList, evt.getX(), evt.getY());
+        }
+    }
+        
+    private int index;
+    private String selectedUsername;
+    private String followAction;
+    private EDD.User targetUser;
     private EDD.Graph graph;
+    private javax.swing.DefaultComboBoxModel comboBoxModel;
     private javax.swing.DefaultListModel model;
     private javax.swing.JList usernameList;
+    private javax.swing.JPanel graphPanel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSplitPane GraphViewerSplit;
+    private javax.swing.JSplitPane Users;
+    private javax.swing.JMenuItem addFollow;
     private javax.swing.JButton addUser;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox<String> combo;
+    private javax.swing.JMenuItem deleteFollow;
+    private javax.swing.JMenuItem deleteUser;
+    private javax.swing.JFrame followFrame;
+    private javax.swing.JPanel followPanel;
+    private javax.swing.JButton okButton;
     private javax.swing.JScrollPane userListScroll;
+    private javax.swing.JPopupMenu userMenu;
     // End of variables declaration//GEN-END:variables
 }

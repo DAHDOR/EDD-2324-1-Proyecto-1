@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.view.Viewer;
 
 /**
  *
@@ -19,41 +22,62 @@ import java.io.IOException;
 public class Graph {
     private int size;
     private List <User> users;
+    private MultiGraph multigraph;
     
     public Graph() {
+        System.setProperty("org.graphstream.ui", "swing");
         size = 0;
         users = new List();
+        multigraph = new MultiGraph("MultiGraph");
     }
     
     public List <User> users() {
         return users;
     }
     
+    public MultiGraph multigraph() {
+        return multigraph;
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
     public void addUser(String username) {
         User user;
+        Node node;
         if (username.contains("@")) {
             user = new User(username);
+            node = multigraph.addNode(username);
+            node.setAttribute("ui.label", username);
         } else {
             user = new User("@" + username);
+            node = multigraph.addNode("@" + username);
+            node.setAttribute("ui.label", "@" + username);
         }
+        node.setAttribute("ui.style", "text-size: 15px; text-color: blue; size: 40px; stroke-color: black; fill-color: white; stroke-mode: plain; ");
         users.add(user);
         size++;
     }
     
+    
     public void deleteUser(User user) {
-        for (Node <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+        for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
             pUser.tInfo.follows.delete(user);
         }
+        multigraph.removeNode(user.username);
         users.delete(user);
         size--;
     }
     
     public void addFollow(User follower, User followed) {
         follower.follows.add(followed);
+        multigraph.addEdge(follower.username + followed.username, follower.username, followed.username, true);
     }
     
     public void deleteFollow(User follower, User followed) {
         follower.follows.delete(followed);
+        multigraph.removeEdge(follower.username + followed.username);
     }
     
     public void clear() {
@@ -86,18 +110,41 @@ public class Graph {
     }
     
     public User getUser(String username) {
-        for (Node <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
-            if (pUser.tInfo.username.equals(username)) {
-                return pUser.tInfo;
+        if (username.charAt(0) == "@".charAt(0)) {
+            for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+                if (pUser.tInfo.username.equals(username)) {
+                    return pUser.tInfo;
+                }
+            }
+        } else {
+            for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+                if (pUser.tInfo.username.equals("@" + username)) {
+                    return pUser.tInfo;
+                }
             }
         }
         return null;
     }
     
+    public void loadMultiGraph(){
+        for (Nodo <User> auxNode = users.first() ;  auxNode != null ; auxNode = auxNode.next()) {
+            Node node = multigraph.addNode(auxNode.tInfo.username);
+            node.setAttribute("ui.label", auxNode.tInfo.username);
+            node.setAttribute("ui.style", "text-size: 20px; text-color: blue; size: 40px; stroke-color: black; fill-color: white; stroke-mode: plain; ");
+        }
+        for (Nodo<User> auxNode = users.first() ;  auxNode != null ; auxNode = auxNode.next()) {
+            for (Nodo<User>  node = auxNode.tInfo.follows.first(); node != null ; node = node.next()) {
+                String nameA = auxNode.tInfo.username;
+                String nameB = node.tInfo.username;
+                multigraph.addEdge(nameA + nameB, nameA, nameB, true);
+            }
+        }
+    }
+    
     public void show() {
-        for (Node <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+        for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
             System.out.println(pUser.tInfo.username + " sigue a:");
-            for (Node <User> pFollow = pUser.tInfo.follows.first(); pFollow != null; pFollow = pFollow.pNext) {
+            for (Nodo <User> pFollow = pUser.tInfo.follows.first(); pFollow != null; pFollow = pFollow.pNext) {
                 System.out.println("- " + pFollow.tInfo.username);
             }
         }
