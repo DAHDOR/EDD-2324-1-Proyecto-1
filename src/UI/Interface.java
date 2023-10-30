@@ -43,6 +43,7 @@ public class Interface extends javax.swing.JFrame {
         MenuFile = new javax.swing.JMenu();
         FileCreate = new javax.swing.JMenuItem();
         FileLoad = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         MenuEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -95,6 +96,9 @@ public class Interface extends javax.swing.JFrame {
             }
         });
         MenuFile.add(FileLoad);
+
+        jMenuItem1.setText("Guardar red social");
+        MenuFile.add(jMenuItem1);
 
         WindowMenus.add(MenuFile);
 
@@ -189,5 +193,6 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JPanel TabStart;
     private javax.swing.JMenuBar WindowMenus;
     private javax.swing.JTabbedPane WindowTabs;
+    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 }

@@ -130,9 +130,7 @@ public class GraphViewer extends javax.swing.JPanel {
         });
         userMenu.add(deleteFollow);
 
-        followFrame.setMaximumSize(new java.awt.Dimension(223, 150));
         followFrame.setMinimumSize(new java.awt.Dimension(223, 150));
-        followFrame.setPreferredSize(new java.awt.Dimension(223, 150));
 
         followPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 

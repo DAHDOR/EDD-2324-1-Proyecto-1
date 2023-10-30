@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Stack;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
@@ -72,7 +74,7 @@ public class Graph {
     
     public void addFollow(User follower, User followed) {
         follower.follows.add(followed);
-        multigraph.addEdge(follower.username + followed.username, follower.username, followed.username, true);
+        Edge edge = multigraph.addEdge(follower.username + followed.username, follower.username, followed.username, true);
     }
     
     public void deleteFollow(User follower, User followed) {
@@ -126,6 +128,10 @@ public class Graph {
         return null;
     }
     
+    public void transpose() {
+        multigraph = App.Utilities.transpose(multigraph);
+    }
+    
     public void loadMultiGraph(){
         for (Nodo <User> auxNode = users.first() ;  auxNode != null ; auxNode = auxNode.next()) {
             Node node = multigraph.addNode(auxNode.tInfo.username);
@@ -137,6 +143,38 @@ public class Graph {
                 String nameA = auxNode.tInfo.username;
                 String nameB = node.tInfo.username;
                 multigraph.addEdge(nameA + nameB, nameA, nameB, true);
+            }
+        }
+    }
+    
+    public void SCC() {
+        
+        // Crear el grafo transpuesto
+        
+        
+        // Algoritmo de Kosaraju-Sharir
+        
+        // Búsqueda en profundidad (DFS)
+        Node root = null;
+        
+        for (Node node : multigraph) {
+            if (node.getInDegree() == 0) {
+                root = node;
+            }
+        }
+        
+        if (root == null) {
+            root = multigraph.getNode(0);
+        }
+        
+        Stack stack = new Stack();
+        stack.push(root);
+        Node[] visited = new Node[multigraph.getNodeCount()];
+        Node current = root;
+        
+        while (visited[visited.length - 1] == null) {
+            if (current.getDegree() > 0) {
+                // código para ir al siguiente nodo. si no, traceback hasta que hayan nodos sin visitar
             }
         }
     }
