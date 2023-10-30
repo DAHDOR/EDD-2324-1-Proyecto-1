@@ -81,6 +81,8 @@ public class GraphViewer extends javax.swing.JPanel {
         graphPanel = (javax.swing.JPanel) viewer.getDefaultView();
                 
         GraphViewerSplit.setRightComponent(graphPanel);
+        
+        graph.SCC();
     }
 
     /**
@@ -251,6 +253,8 @@ public class GraphViewer extends javax.swing.JPanel {
             graph.deleteUser(graph.getUser(model.get(index).toString()));
             model.remove(index);
         }
+        
+        graph.SCC();
     }//GEN-LAST:event_deleteUserActionPerformed
 
     private void addFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFollowActionPerformed
@@ -285,6 +289,8 @@ public class GraphViewer extends javax.swing.JPanel {
             case "adding" -> graph.addFollow(targetUser, graph.getUser(selectedUsername));
             case "deleting" -> graph.deleteFollow(targetUser, graph.getUser(selectedUsername));
         }
+        
+        graph.SCC();
         
         followFrame.setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed

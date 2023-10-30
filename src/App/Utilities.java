@@ -5,6 +5,7 @@
 package App;
 
 import EDD.List;
+import EDD.Nodo;
 import EDD.Pair;
 import java.util.Stack;
 import org.graphstream.graph.Edge;
@@ -57,10 +58,10 @@ public class Utilities {
         return pair;
     }
     
-    public static Pair <List <Node>, List <Node>> secondDFS(Node root, Pair <List <Node>, List <Node>> pair) {
+    public static Pair <List <Node>, List <String>> secondDFS(Node root, Pair <List <Node>, List <String>> pair) {
         if (!pair.l.contains(root)) {
             pair.l.add(root);
-            pair.s.add(root);
+            pair.s.add(root.getId());
             for (Edge edge : root) {
                 if (edge.getSourceNode() == root) {
                     pair = secondDFS(edge.getTargetNode(), pair);
@@ -101,7 +102,7 @@ public class Utilities {
         return stack1;
     }
     
-    public static List <List <Node>> kosaraju(MultiGraph multigraph) {
+    public static List <List <String>> kosaraju(MultiGraph multigraph) {
         
         // Primer DFS
         Node root = null;
@@ -123,20 +124,25 @@ public class Utilities {
         
         // Segundo DFS (con el grafo transverso)
         multigraph = transpose(multigraph);                                         // transponer grafo
-        List <List <Node>> scc = new List();                                        // lista con los componentes fuertemente conectados
+        List <List <String>> scc = new List();                                        // lista con los componentes fuertemente conectados
         List <Node> sccList = new List();                                           // componente fuertemente conectado
-        List <Node> visited2 = new List();                                          // nodos visitados a ser revertidos
+        String rootname;
         
-        // Se agregan los nodos de visitados1 revertidos a visitados2
-        
-        Pair <List <Node>, List <Node>> listPair = new Pair(pair.l, sccList);   // tupla con la lista de visitados y el componente fuertemente conectado
+        Pair <List <Node>, List <String>> listPair = new Pair(pair.l, sccList);   // tupla con la lista de visitados y el componente fuertemente conectado
         
         while (!stack.isEmpty()){
             sccList = new List();
             listPair = new Pair(listPair.l, sccList);
-            root = (Node) stack.pop();
+            rootname = stack.pop().toString();
+            root = multigraph.getNode(rootname);
             listPair = secondDFS(root, listPair);
             scc.add(listPair.s);
+        }
+        
+        for (Nodo <List <String>> lAux = scc.first(); lAux != null; lAux = lAux.next()) {
+            if (lAux.info().first() == null) {
+                scc.delete(lAux.info());
+            }
         }
         
         return scc;

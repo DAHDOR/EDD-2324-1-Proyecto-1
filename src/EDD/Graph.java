@@ -5,6 +5,7 @@
  */
 package EDD;
 
+import static App.Utilities.kosaraju;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,7 +75,7 @@ public class Graph {
     
     public void addFollow(User follower, User followed) {
         follower.follows.add(followed);
-        Edge edge = multigraph.addEdge(follower.username + followed.username, follower.username, followed.username, true);
+        multigraph.addEdge(follower.username + followed.username, follower.username, followed.username, true);
     }
     
     public void deleteFollow(User follower, User followed) {
@@ -148,33 +149,19 @@ public class Graph {
     }
     
     public void SCC() {
+        String source;
+        String target;
         
-        // Crear el grafo transpuesto
-        
-        
-        // Algoritmo de Kosaraju-Sharir
-        
-        // Búsqueda en profundidad (DFS)
-        Node root = null;
-        
-        for (Node node : multigraph) {
-            if (node.getInDegree() == 0) {
-                root = node;
-            }
-        }
-        
-        if (root == null) {
-            root = multigraph.getNode(0);
-        }
-        
-        Stack stack = new Stack();
-        stack.push(root);
-        Node[] visited = new Node[multigraph.getNodeCount()];
-        Node current = root;
-        
-        while (visited[visited.length - 1] == null) {
-            if (current.getDegree() > 0) {
-                // código para ir al siguiente nodo. si no, traceback hasta que hayan nodos sin visitar
+        List <List <String>> scc = kosaraju(multigraph);
+        for (Nodo <List <String>> lAux = scc.first(); lAux != null; lAux = lAux.next()) {
+            for (Nodo <String> pAux = lAux.info().first(); pAux != null; pAux = pAux.next()) {
+                for (Edge edge : multigraph.getNode(pAux.info())) {
+                    source = edge.getSourceNode().getId();
+                    target = edge.getTargetNode().getId();
+                    if ((lAux.info().contains(source)) && (lAux.info().contains(target))) {
+                        edge.setAttribute("ui.style", "fill-color: red; stroke-color: red;");
+                    }
+                }
             }
         }
     }
