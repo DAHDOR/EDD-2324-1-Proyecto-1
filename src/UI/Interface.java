@@ -119,7 +119,7 @@ public class Interface extends javax.swing.JFrame {
                 if (!Utilities.validateCharacters(graphname.toLowerCase(), validChars)) {
                     throw new java.io.IOException("Solo se permiten caracteres alfanuméricos, espacios, \"_\" y \"-\".");
                 }
-                GraphViewer tab = new GraphViewer();
+                GraphViewer tab = new GraphViewer("repository\\" + graphname + ".txt");
                 WindowTabs.add(graphname, tab);
                 break;
             } catch (java.io.IOException ex) {
@@ -137,7 +137,7 @@ public class Interface extends javax.swing.JFrame {
                 if (!Utilities.validateCharacters(graphname.toLowerCase(), validChars)) {
                     throw new java.io.IOException("Solo se permiten caracteres alfanuméricos, espacios, \"_\" y \"-\".");
                 }
-                GraphViewer tab = new GraphViewer();
+                GraphViewer tab = new GraphViewer("repository\\" + graphname + ".txt");
                 WindowTabs.add(graphname, tab);
                 break;
             } catch (java.io.IOException ex) {
@@ -154,7 +154,7 @@ public class Interface extends javax.swing.JFrame {
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 EDD.Graph graph = new EDD.Graph();
                 graph.load(FileChooser.getSelectedFile());
-                GraphViewer tab = new GraphViewer(graph);
+                GraphViewer tab = new GraphViewer(FileChooser.getSelectedFile().getPath(), graph);
                 String filename = FileChooser.getSelectedFile().getName();
                 WindowTabs.add(filename.substring(0, filename.length()-4), tab);
             }
@@ -171,7 +171,7 @@ public class Interface extends javax.swing.JFrame {
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 EDD.Graph graph = new EDD.Graph();
                 graph.load(FileChooser.getSelectedFile());
-                GraphViewer tab = new GraphViewer(graph);
+                GraphViewer tab = new GraphViewer(FileChooser.getSelectedFile().getPath(), graph);
                 WindowTabs.add(tab);
             }
         } catch (java.io.IOException ex) {

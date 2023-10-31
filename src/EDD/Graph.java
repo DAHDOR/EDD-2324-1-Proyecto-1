@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
 import org.graphstream.graph.Edge;
@@ -108,6 +109,23 @@ public class Graph {
                         addFollow(follower, followed);
                     }
                 }
+            }
+        }
+    }
+    
+    public void save(String path) throws IOException {
+        File file = new File(path);
+        file.delete();
+        File filen = new File(path);
+        FileWriter writer = new FileWriter(path);
+        writer.write("usuarios");
+        for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+            writer.append("\n" + pUser.info().username());
+        }
+        writer.append("\nrelaciones");
+        for (Nodo <User> pUser = users.first(); pUser != null; pUser = pUser.pNext) {
+            for (Nodo <User> pFollow = pUser.info().follows.first(); pFollow != null; pFollow = pFollow.pNext) {
+                writer.append("\n" + pUser.info().username() + ", " + pFollow.info().username());
             }
         }
     }

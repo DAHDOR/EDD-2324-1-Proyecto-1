@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
@@ -15,14 +15,16 @@ public class GraphViewer extends javax.swing.JPanel {
     
     /**
      * Creates new form NewJPanel
+     * @param path
      */
-    public GraphViewer() {
+    public GraphViewer(String path) {
         
         initComponents();
         
         index = 0;
         selectedUsername = "";
         followAction = "";
+        this.path = path;
         targetUser = new EDD.User("none");
         
         comboBoxModel = new javax.swing.DefaultComboBoxModel();
@@ -48,7 +50,7 @@ public class GraphViewer extends javax.swing.JPanel {
         GraphViewerSplit.setRightComponent(graphPanel);
     }
     
-    public GraphViewer(EDD.Graph graph) {
+    public GraphViewer(String path, EDD.Graph graph) {
         
         initComponents();
         
@@ -73,6 +75,7 @@ public class GraphViewer extends javax.swing.JPanel {
             }
         });
         
+        this.path = path;
         this.graph = graph;
         
         org.graphstream.ui.view.Viewer viewer = this.graph.multigraph().display();
@@ -104,9 +107,11 @@ public class GraphViewer extends javax.swing.JPanel {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         GraphViewerSplit = new javax.swing.JSplitPane();
+        GraphData = new javax.swing.JSplitPane();
         Users = new javax.swing.JSplitPane();
         addUser = new javax.swing.JButton();
         userListScroll = new javax.swing.JScrollPane();
+        Save = new javax.swing.JButton();
 
         deleteUser.setText("Eliminar usuario");
         deleteUser.addActionListener(new java.awt.event.ActionListener() {
@@ -177,6 +182,8 @@ public class GraphViewer extends javax.swing.JPanel {
         GraphViewerSplit.setMinimumSize(new java.awt.Dimension(1024, 518));
         GraphViewerSplit.setPreferredSize(new java.awt.Dimension(1024, 518));
 
+        GraphData.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
         Users.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         Users.setMinimumSize(new java.awt.Dimension(100, 518));
         Users.setPreferredSize(new java.awt.Dimension(100, 518));
@@ -193,7 +200,17 @@ public class GraphViewer extends javax.swing.JPanel {
         Users.setTopComponent(addUser);
         Users.setRightComponent(userListScroll);
 
-        GraphViewerSplit.setLeftComponent(Users);
+        GraphData.setBottomComponent(Users);
+
+        Save.setText("Guardar");
+        Save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveActionPerformed(evt);
+            }
+        });
+        GraphData.setLeftComponent(Save);
+
+        GraphViewerSplit.setLeftComponent(GraphData);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -321,6 +338,15 @@ public class GraphViewer extends javax.swing.JPanel {
 
     }//GEN-LAST:event_deleteFollowActionPerformed
 
+    private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
+        try {
+            graph.save(path);
+            javax.swing.JOptionPane.showMessageDialog(null, "Red social guardada con éxito en: " + path, "Guardado exitoso", javax.swing.JOptionPane.PLAIN_MESSAGE);
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error al guardar el archivo.", "Error", javax.swing.JOptionPane.PLAIN_MESSAGE);
+        }
+    }//GEN-LAST:event_SaveActionPerformed
+
     private void usernameListMouseClicked(java.awt.event.MouseEvent evt) {
         
         index = usernameList.locationToIndex(evt.getPoint());
@@ -335,6 +361,7 @@ public class GraphViewer extends javax.swing.JPanel {
     private int index;
     private String selectedUsername;
     private String followAction;
+    private String path;
     private EDD.User targetUser;
     private EDD.Graph graph;
     private javax.swing.DefaultComboBoxModel comboBoxModel;
@@ -342,7 +369,9 @@ public class GraphViewer extends javax.swing.JPanel {
     private javax.swing.JList usernameList;
     private javax.swing.JPanel graphPanel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSplitPane GraphData;
     private javax.swing.JSplitPane GraphViewerSplit;
+    private javax.swing.JButton Save;
     private javax.swing.JSplitPane Users;
     private javax.swing.JMenuItem addFollow;
     private javax.swing.JButton addUser;
